@@ -1,6 +1,5 @@
 package com.yukms.easytest.user;
 
-import com.yukms.easytest.user.IUserService;
 import com.yukms.easytest.user.dao.IUserDao;
 import com.yukms.easytest.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
