@@ -30,13 +30,13 @@ public final class DataMocker {
     /**
      * 设置mock数据
      *
-     * @param fileName mock文件名
-     * @param inputStream 文件对应的输入流
-     * @param fileToObject 文件转换为对象的方式
+     * @param fileName        mock文件名
+     * @param inputStream     文件对应的输入流
+     * @param fileToObject    文件转换为对象的方式
      * @param requestAsserter 请求断言器
      */
     public static void setResponseMockData(String fileName, InputStream inputStream, FileToObject fileToObject,
-        IRequestAsserter requestAsserter) {
+        Object requestAsserter) {
         Objects.requireNonNull(fileToObject, "文件转换方式不能为空");
         Objects.requireNonNull(requestAsserter, "请求断言器不能为空");
         LOGGER.info("尝试设置Mock数据：" + fileName);
@@ -44,7 +44,7 @@ public final class DataMocker {
         mockData.setFileName(fileName);
         mockData.setInputStream(inputStream);
         mockData.setFileToObject(fileToObject);
-        mockData.setAsserter(requestAsserter);
+        mockData.setMock(requestAsserter);
         MockDatas mockDatas = THREAD_LOCAL.get();
         mockDatas.setMockData(mockData);
         LOGGER.info("设置Mock数据成功：" + fileName);
@@ -58,25 +58,25 @@ public final class DataMocker {
      */
     static boolean isGetMockData(Method requestMethod) {
         MockData mockData = THREAD_LOCAL.get().peek();
-        return null != mockData && ClassUtil.isOverrideMethod(mockData.getAsserter().getClass(), requestMethod);
+        return null != mockData && ClassUtil.isOverrideMethod(mockData.getMock().getClass(), requestMethod);
     }
 
     /**
      * 获取mock数据
      *
      * @param requestMethod 请求方法
-     * @param args 请求参数
+     * @param args          请求参数
      * @return mock数据
      */
     public static Object getData(Method requestMethod, Object[] args) {
         MockData mockData = THREAD_LOCAL.get().poll();
-        IRequestAsserter asserter = mockData.getAsserter();
-        // 执行请求参数断言器
-        Method asserterMethod = ReflectionUtils
-            .findMethod(asserter.getClass(), requestMethod.getName(), requestMethod.getParameterTypes());
-        Objects.requireNonNull(asserterMethod).setAccessible(true);
-        ReflectionUtils.invokeMethod(asserterMethod, asserter, args);
-        return buildData(mockData, asserterMethod.getGenericReturnType());
+        Object mock = mockData.getMock();
+        // 执行mock中参数校验
+        Method assertMockMethod = ReflectionUtils
+            .findMethod(mock.getClass(), requestMethod.getName(), requestMethod.getParameterTypes());
+        Objects.requireNonNull(assertMockMethod).setAccessible(true);
+        ReflectionUtils.invokeMethod(assertMockMethod, mock, args);
+        return buildData(mockData, assertMockMethod.getGenericReturnType());
     }
 
     /**
@@ -97,7 +97,7 @@ public final class DataMocker {
     /**
      * 构建Mock数据
      *
-     * @param mockData mock数据
+     * @param mockData   mock数据
      * @param returnType 返回类型
      * @return 结果
      */
@@ -170,8 +170,8 @@ public final class DataMocker {
         private InputStream inputStream;
         /** 文件转换为对线的方式 */
         private FileToObject fileToObject;
-        /** 请求断言器 */
-        private IRequestAsserter asserter;
+        /** 需要mock的对象 */
+        private Object mock;
         /** 已经被使用 */
         private boolean used;
 
@@ -199,12 +199,12 @@ public final class DataMocker {
             this.fileToObject = fileToObject;
         }
 
-        IRequestAsserter getAsserter() {
-            return asserter;
+        Object getMock() {
+            return mock;
         }
 
-        void setAsserter(IRequestAsserter asserter) {
-            this.asserter = asserter;
+        void setMock(Object mock) {
+            this.mock = mock;
         }
 
         private boolean isUsed() {

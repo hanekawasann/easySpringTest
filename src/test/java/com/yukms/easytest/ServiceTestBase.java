@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 
 import com.yukms.easytest.test.mock.DataMocker;
 import com.yukms.easytest.test.mock.FileToObject;
-import com.yukms.easytest.test.mock.IRequestAsserter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -60,7 +59,7 @@ public class ServiceTestBase extends WebApplicationObjectSupport {
     /**
      * 设置request参数
      *
-     * @param name 参数名
+     * @param name  参数名
      * @param value 参数值
      */
     protected final void setRequestAttribute(String name, Object value) {
@@ -70,7 +69,7 @@ public class ServiceTestBase extends WebApplicationObjectSupport {
     /**
      * 设置session参数
      *
-     * @param name 参数名
+     * @param name  参数名
      * @param value 参数值
      */
     protected final void setSessionAttribute(String name, Object value) {
@@ -82,15 +81,15 @@ public class ServiceTestBase extends WebApplicationObjectSupport {
     /**
      * 设置mock数据
      *
-     * @param fileName mock文件名
+     * @param fileName     mock文件名
      * @param fileToObject 文件转换为对象的方式
+     * @param mock         需要mock的对象
      */
-    protected final void setResponseMockDataInPackage(String fileName, FileToObject fileToObject,
-        IRequestAsserter requestAsserter) {
+    protected final void setResponseMockDataInPackage(String fileName, FileToObject fileToObject, Object mock) {
         InputStream inputStream = null;
         if (!StringUtils.isEmpty(fileName)) {
             inputStream = this.getClass().getResourceAsStream(fileName);
         }
-        DataMocker.setResponseMockData(fileName, inputStream, fileToObject, requestAsserter);
+        DataMocker.setResponseMockData(fileName, inputStream, fileToObject, mock);
     }
 }
