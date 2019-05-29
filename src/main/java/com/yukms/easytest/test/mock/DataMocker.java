@@ -86,6 +86,11 @@ public final class DataMocker {
         Iterator<MockData> iterator = mockDatas.getMockDataList().iterator();
         while (iterator.hasNext()) {
             MockData mockData = iterator.next();
+            try {
+                mockData.getInputStream().close();
+            } catch (IOException e) {
+                log.info("释放输入流失败：" + mockData.toString());
+            }
             iterator.remove();
             log.info("清除Mock数据成功：" + mockData.toString());
         }
