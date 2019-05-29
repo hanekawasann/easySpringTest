@@ -9,9 +9,9 @@
         <relativePath/>
     </parent>
     <groupId>com.yukms.easytest</groupId>
-    <artifactId>easytest</artifactId>
+    <artifactId>easy-test</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>easytest</name>
+    <name>easy-test</name>
     <description>Test with Spring</description>
 
     <properties>
