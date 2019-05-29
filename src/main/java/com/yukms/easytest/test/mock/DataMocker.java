@@ -11,8 +11,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.yukms.easytest.test.util.ClassUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -20,9 +19,8 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author yukms 763803382@qq.com 2019/3/26.
  */
+@Log4j2
 public final class DataMocker {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataMocker.class);
     private static final ThreadLocal<MockDatas> THREAD_LOCAL = ThreadLocal.withInitial(MockDatas::new);
 
     private DataMocker() {}
@@ -39,7 +37,7 @@ public final class DataMocker {
         Object requestAsserter) {
         Objects.requireNonNull(fileToObject, "文件转换方式不能为空");
         Objects.requireNonNull(requestAsserter, "请求断言器不能为空");
-        LOGGER.info("尝试设置Mock数据：" + fileName);
+        log.info("尝试设置Mock数据：" + fileName);
         MockData mockData = new MockData();
         mockData.setFileName(fileName);
         mockData.setInputStream(inputStream);
@@ -47,7 +45,7 @@ public final class DataMocker {
         mockData.setMock(requestAsserter);
         MockDatas mockDatas = THREAD_LOCAL.get();
         mockDatas.setMockData(mockData);
-        LOGGER.info("设置Mock数据成功：" + fileName);
+        log.info("设置Mock数据成功：" + fileName);
     }
 
     /**
@@ -83,13 +81,13 @@ public final class DataMocker {
      * 清除mock数据
      */
     public static void clearData() {
-        LOGGER.info("尝试清除Mock数据");
+        log.info("尝试清除Mock数据");
         MockDatas mockDatas = THREAD_LOCAL.get();
         Iterator<MockData> iterator = mockDatas.getMockDataList().iterator();
         while (iterator.hasNext()) {
             MockData mockData = iterator.next();
             iterator.remove();
-            LOGGER.info("清除Mock数据成功：" + mockData.toString());
+            log.info("清除Mock数据成功：" + mockData.toString());
         }
         mockDatas.getIndex().set(0);
     }
@@ -106,9 +104,9 @@ public final class DataMocker {
         try (InputStream inputStream = mockData.getInputStream()) {
             result = mockData.getFileToObject().toObject(inputStream, returnType);
         } catch (IOException e) {
-            LOGGER.error("Mock数据文件输入流关闭失败");
+            log.error("Mock数据文件输入流关闭失败");
         }
-        LOGGER.info("获取Mock数据成功：" + mockData.getFileName());
+        log.info("获取Mock数据成功：" + mockData.getFileName());
         return result;
     }
 
