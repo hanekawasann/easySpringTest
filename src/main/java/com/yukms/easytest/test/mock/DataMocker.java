@@ -54,7 +54,7 @@ public final class DataMocker {
      * @param requestMethod 请求方法
      * @return true表示获取Mock数据
      */
-    static boolean isGetMockData(Method requestMethod) {
+    public static boolean isGetMockData(Method requestMethod) {
         MockData mockData = THREAD_LOCAL.get().peek();
         return null != mockData && ClassUtil.isOverrideMethod(mockData.getMock().getClass(), requestMethod);
     }
