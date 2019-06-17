@@ -37,7 +37,6 @@ public final class DataMocker {
         Object requestAsserter) {
         Objects.requireNonNull(fileToObject, "文件转换方式不能为空");
         Objects.requireNonNull(requestAsserter, "请求断言器不能为空");
-        log.info("尝试设置Mock数据：" + fileName);
         MockData mockData = new MockData();
         mockData.setFileName(fileName);
         mockData.setInputStream(inputStream);
@@ -45,7 +44,7 @@ public final class DataMocker {
         mockData.setMock(requestAsserter);
         MockDatas mockDatas = THREAD_LOCAL.get();
         mockDatas.setMockData(mockData);
-        log.info("设置Mock数据成功：" + fileName);
+        log.info("设置Mock数据：" + fileName);
     }
 
     /**
@@ -81,7 +80,6 @@ public final class DataMocker {
      * 清除mock数据
      */
     public static void clearData() {
-        log.info("尝试清除Mock数据");
         MockDatas mockDatas = THREAD_LOCAL.get();
         Iterator<MockData> iterator = mockDatas.getMockDataList().iterator();
         while (iterator.hasNext()) {
@@ -94,8 +92,12 @@ public final class DataMocker {
             } catch (IOException e) {
                 log.info("释放输入流失败：" + mockData.toString());
             }
+            log.info("清除Mock数据：" + mockData.toString());
+            if (!mockData.isUsed()) {
+                log.error("Mock数据未被使用：" + mockData.toString());
+            }
             iterator.remove();
-            log.info("清除Mock数据成功：" + mockData.toString());
+
         }
         mockDatas.getIndex().set(0);
     }
