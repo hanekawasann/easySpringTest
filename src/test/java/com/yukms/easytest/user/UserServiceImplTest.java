@@ -1,7 +1,6 @@
 package com.yukms.easytest.user;
 
 import com.yukms.easytest.ServiceTestBase;
-import com.yukms.easytest.test.mock.FileToObject;
 import com.yukms.easytest.user.dao.UserDaoRequestAsserter;
 import com.yukms.easytest.user.entity.User;
 import org.junit.Assert;
@@ -18,7 +17,7 @@ public class UserServiceImplTest extends ServiceTestBase {
 
     @Test
     public void test_getUser_json() {
-        setResponseMockDataInPackage("getUser.txt", FileToObject.JSON, new UserDaoRequestAsserter() {
+        setMockDataInPackage("getUser.json", new UserDaoRequestAsserter() {
             @Override
             public User getUser(long id) {
                 Assert.assertEquals(1, id);
@@ -35,7 +34,7 @@ public class UserServiceImplTest extends ServiceTestBase {
 
     @Test
     public void test_getUser_bat() {
-        setResponseMockDataInPackage("getUser.bat", FileToObject.READ_OBJECT, new UserDaoRequestAsserter() {
+        setMockDataInPackage("getUser.bat", new UserDaoRequestAsserter() {
             @Override
             public User getUser(long id) {
                 Assert.assertEquals(1, id);
@@ -52,7 +51,7 @@ public class UserServiceImplTest extends ServiceTestBase {
 
     @Test
     public void test_update_void() {
-        setResponseMockDataInPackage(null, FileToObject.VOID, new UserDaoRequestAsserter() {
+        setMockDataInPackage(null, new UserDaoRequestAsserter() {
             @Override
             public void update(User user) {
                 Assert.assertEquals(1L, user.getId());

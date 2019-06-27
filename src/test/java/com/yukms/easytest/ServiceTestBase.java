@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import com.yukms.easytest.test.mock.DataMocker;
 import com.yukms.easytest.test.mock.FileToObject;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -15,7 +16,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
@@ -83,13 +83,35 @@ public class ServiceTestBase extends WebApplicationObjectSupport {
      *
      * @param fileName     mock文件名
      * @param fileToObject 文件转换为对象的方式
-     * @param mock         需要mock的对象
+     * @param mockObj      需要mock的对象
      */
-    protected final void setResponseMockDataInPackage(String fileName, FileToObject fileToObject, Object mock) {
+    protected final void setMockDataInPackage(String fileName, FileToObject fileToObject, Object mockObj) {
         InputStream inputStream = null;
-        if (!StringUtils.isEmpty(fileName)) {
+        if (StringUtils.isNotBlank(fileName)) {
             inputStream = this.getClass().getResourceAsStream(fileName);
         }
-        DataMocker.setResponseMockData(fileName, inputStream, fileToObject, mock);
+        DataMocker.setResponseMockData(fileName, inputStream, fileToObject, mockObj);
+    }
+
+    /**
+     * 设置mock数据
+     *
+     * @param fileName mock文件名
+     * @param mockObj  需要mock的对象
+     */
+    protected void setMockDataInPackage(String fileName, Object mockObj) {
+        InputStream inputStream = null;
+        FileToObject fileToObject;
+        if (StringUtils.isBlank(fileName)) {
+            fileToObject = FileToObject.VOID;
+        } else {
+            inputStream = this.getClass().getResourceAsStream(fileName);
+            if (fileName.endsWith(".json")) {
+                fileToObject = FileToObject.JSON;
+            } else {
+                fileToObject = FileToObject.READ_OBJECT;
+            }
+        }
+        DataMocker.setResponseMockData(fileName, inputStream, fileToObject, mockObj);
     }
 }
