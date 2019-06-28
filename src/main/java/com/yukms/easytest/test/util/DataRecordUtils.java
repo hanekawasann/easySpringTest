@@ -49,7 +49,7 @@ public final class DataRecordUtils {
             file.mkdirs();
         }
         RECORD_FILE_PATH_PREFIX = file.getAbsolutePath();
-        log.info("创建记录主文件夹" + RECORD_FILE_PATH_PREFIX);
+        log.info("记录根目录" + RECORD_FILE_PATH_PREFIX);
     }
 
     public static void recordData(ProceedingJoinPoint point, Object result) throws IOException {
