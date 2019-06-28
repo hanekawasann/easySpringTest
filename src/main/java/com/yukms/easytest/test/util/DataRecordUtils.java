@@ -103,13 +103,11 @@ public final class DataRecordUtils {
     }
 
     private static String buildFolderName(ProceedingJoinPoint joinPoint) {
-        return StringUtils.join(//
-            new Object[] {//
-                System.currentTimeMillis(),//
-                joinPoint.getTarget().getClass().getSimpleName(),//
-                AspectJUtils.getMethod(joinPoint).getName()//
-            },//
-            FOLDER_NAME_SPLIT);
+        return System.currentTimeMillis()//
+            + FOLDER_NAME_SPLIT//
+            + joinPoint.getTarget().getClass().getSimpleName()//
+            + CLASS_METHOD_SPLIT//
+            + AspectJUtils.getMethod(joinPoint).getName();
     }
 
     private DataRecordUtils() { }
