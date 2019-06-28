@@ -23,6 +23,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 public final class DataRecordUtils {
     private static final ThreadLocal<DataRecord> RECORD_DATA = TransmittableThreadLocal.withInitial(DataRecord::new);
     private static final YamlConfig CONFIG = new YamlConfig();
+    private static final String DATA_RECORDS_FILE_NAME = "dataRecords.yaml";
     private static final String FOLDER_NAME_SPLIT = "_";
     private static String FILE_PATH_SPLIT = "\\";
     private static String FILE_SUFFIX = ".yaml";
@@ -73,11 +74,18 @@ public final class DataRecordUtils {
         // 记录文件
         dataRecord.addFileNames(fileName);
         log.info("保存记录文件" + fileName);
+        saveSimpleData(folderPath + DATA_RECORDS_FILE_NAME, dataRecord.getFileNames());
     }
 
-    private static void saveData(String path, MockData data) throws IOException {
+    private static void saveData(String path, Object obj) throws IOException {
         YamlWriter writer = new YamlWriter(new FileWriter(path), CONFIG);
-        writer.write(data);
+        writer.write(obj);
+        writer.close();
+    }
+
+    private static void saveSimpleData(String path, Object obj) throws IOException {
+        YamlWriter writer = new YamlWriter(new FileWriter(path));
+        writer.write(obj);
         writer.close();
     }
 
