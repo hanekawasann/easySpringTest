@@ -61,7 +61,7 @@ public final class DataRecordUtils {
         }
         Class<?> mockClazz = point.getTarget().getClass();
         Method method = AspectJUtils.getMethod(point);
-        // 保存文件
+        // 保存Mock文件
         String fileName = System.currentTimeMillis() + FOLDER_NAME_SPLIT + mockClazz.getSimpleName() +
             CLASS_METHOD_SPLIT + method.getName() + FILE_SUFFIX;
         MockData data = new MockData();
@@ -69,8 +69,7 @@ public final class DataRecordUtils {
         data.setMethodName(method.getName());
         data.setArgs(new ArrayList<>(Arrays.asList(point.getArgs())));
         data.setResult(result);
-        String filePath = folderPath + fileName;
-        saveData(filePath, data);
+        saveData(folderPath + fileName, data);
         // 记录文件
         dataRecord.addFileNames(fileName);
         log.info("保存记录文件" + fileName);
