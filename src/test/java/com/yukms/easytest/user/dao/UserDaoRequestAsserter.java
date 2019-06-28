@@ -10,9 +10,4 @@ public abstract class UserDaoRequestAsserter implements IUserDao {
     public User getUser(long id) {
         return null;
     }
-
-    @Override
-    public void update(User user) {
-
-    }
 }

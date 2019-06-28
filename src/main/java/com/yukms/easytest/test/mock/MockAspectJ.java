@@ -2,10 +2,13 @@ package com.yukms.easytest.test.mock;
 
 import java.lang.reflect.Method;
 
+import com.yukms.easytest.test.EasyTestConfig;
+import com.yukms.easytest.test.util.AspectJUtils;
+import com.yukms.easytest.test.util.DataRecordUtils;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.util.ReflectionUtils;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 
 /**
  * mock切面
@@ -13,20 +16,21 @@ import org.springframework.util.ReflectionUtils;
  * @author yukms 763803382@qq.com 2019/3/26.
  */
 @Log4j2
+@Aspect
 public class MockAspectJ {
-    protected Object mockAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        Method method = getMethod(joinPoint);
+    @Around("(@within(org.springframework.stereotype.Service)"//
+        + "|| @within(org.springframework.stereotype.Component)"//
+        + "|| @within(org.springframework.stereotype.Repository))")
+    protected Object mockAround(ProceedingJoinPoint point) throws Throwable {
+        Method method = AspectJUtils.getMethod(point);
         if (DataMocker.isGetMockData(method)) {
-            log.info(joinPoint.getSignature().toString() + "尝试获取Mock数据");
-            Object[] args = joinPoint.getArgs();
-            return DataMocker.getData(method, args);
+            log.info("获取Mock数据：" + point.getTarget().getClass().getSimpleName() + "." + method.getName());
+            return DataMocker.getData(method, point.getArgs());
         }
-        return joinPoint.proceed();
-    }
-
-    private Method getMethod(ProceedingJoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        return ReflectionUtils
-            .findMethod(joinPoint.getTarget().getClass(), signature.getName(), signature.getParameterTypes());
+        Object result = point.proceed();
+        if (EasyTestConfig.isRecord()) {
+            DataRecordUtils.recordData(point, result);
+        }
+        return result;
     }
 }

@@ -1,5 +1,7 @@
 package com.yukms.easytest.user.dao.impl;
 
+import java.util.Random;
+
 import com.yukms.easytest.user.dao.IUserDao;
 import com.yukms.easytest.user.entity.User;
 import org.springframework.stereotype.Repository;
@@ -9,15 +11,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class UserDaoImpl implements IUserDao {
-
     @Override
     public User getUser(long id) {
-        return null;
+        User user = new User();
+        user.setId(new Random().nextLong());
+        user.setName("yukms");
+        user.setAge(new Random().nextInt());
+        return user;
     }
-
-    @Override
-    public void update(User user) {
-
-    }
-
 }
