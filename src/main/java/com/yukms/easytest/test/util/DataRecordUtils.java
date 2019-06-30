@@ -25,10 +25,10 @@ public final class DataRecordUtils {
     private static final YamlConfig CONFIG = new YamlConfig();
     private static final String DATA_RECORDS_FILE_NAME = "dataRecords.yaml";
     private static final String FOLDER_NAME_SPLIT = "_";
-    private static String FILE_PATH_SPLIT = "\\";
-    private static String FILE_SUFFIX = ".yaml";
-    private static String CLASS_METHOD_SPLIT = "#";
-    private static String RECORD_FILE_PATH_PREFIX;
+    private static final String FILE_PATH_SPLIT = "\\";
+    private static final String FILE_SUFFIX = ".yaml";
+    private static final String CLASS_METHOD_SPLIT = "#";
+    private static final String RECORD_FILE_PATH_PREFIX;
 
     static {
         YamlConfig.WriteConfig writeConfig = CONFIG.writeConfig;
