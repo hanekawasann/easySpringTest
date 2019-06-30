@@ -1,6 +1,6 @@
 package com.yukms.easytest;
 
-import com.yukms.easytest.test.mock.MockAspectJ;
+import com.yukms.easytest.test.mock.MockDataAspectJ;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TestConfiguration {
     @Bean
-    public MockAspectJ getMockAspectJ() {
-        return new MockAspectJ();
+    public MockDataAspectJ getMockAspectJ() {
+        return new MockDataAspectJ();
     }
 }

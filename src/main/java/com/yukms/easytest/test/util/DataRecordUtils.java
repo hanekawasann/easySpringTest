@@ -5,9 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -63,7 +60,7 @@ public final class DataRecordUtils {
         // 检查主目录
         String folderPath = dataRecord.getFolderPath();
         if (StringUtils.isBlank(folderPath)) {
-            folderPath = getFolderPath(point);
+            folderPath = initAndGetFolderPath(point);
         }
         Class<?> mockClazz = point.getTarget().getClass();
         Method method = AspectJUtils.getMethod(point);
@@ -94,7 +91,7 @@ public final class DataRecordUtils {
         writer.close();
     }
 
-    private static String getFolderPath(ProceedingJoinPoint joinPoint) {
+    private static String initAndGetFolderPath(ProceedingJoinPoint joinPoint) {
         String folderName = buildFolderName(joinPoint);
         DataRecord dataRecord = RECORD_DATA.get();
         String folderPath = RECORD_FILE_PATH_PREFIX + FILE_PATH_SPLIT + folderName + FILE_PATH_SPLIT;

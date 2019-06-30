@@ -17,7 +17,7 @@ import org.aspectj.lang.annotation.Aspect;
  */
 @Log4j2
 @Aspect
-public class MockAspectJ {
+public class MockDataAspectJ {
     @Around("(@within(org.springframework.stereotype.Service)"//
         + "|| @within(org.springframework.stereotype.Component)"//
         + "|| @within(org.springframework.stereotype.Repository))")
