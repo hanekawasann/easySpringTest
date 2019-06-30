@@ -2,6 +2,7 @@ package com.yukms.easytest.test.mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Data;
 
@@ -10,6 +11,8 @@ import lombok.Data;
  */
 @Data
 public class DataRecord {
+    /** 序号 */
+    private AtomicInteger num = new AtomicInteger(1);
     /** 文件夹名 */
     private String folderPath;
     /** 文件名 */

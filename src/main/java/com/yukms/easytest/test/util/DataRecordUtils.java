@@ -4,8 +4,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.esotericsoftware.yamlbeans.YamlConfig;
@@ -63,7 +68,7 @@ public final class DataRecordUtils {
         Class<?> mockClazz = point.getTarget().getClass();
         Method method = AspectJUtils.getMethod(point);
         // 保存Mock文件
-        String fileName = System.currentTimeMillis() + FOLDER_NAME_SPLIT + mockClazz.getSimpleName() +
+        String fileName = dataRecord.getNum().getAndIncrement() + FOLDER_NAME_SPLIT + mockClazz.getSimpleName() +
             CLASS_METHOD_SPLIT + method.getName() + FILE_SUFFIX;
         MockData data = new MockData();
         data.setMockClazz(mockClazz.getName());
@@ -103,11 +108,15 @@ public final class DataRecordUtils {
     }
 
     private static String buildFolderName(ProceedingJoinPoint joinPoint) {
-        return System.currentTimeMillis()//
+        return getFormatDateTime()//
             + FOLDER_NAME_SPLIT//
             + joinPoint.getTarget().getClass().getSimpleName()//
             + CLASS_METHOD_SPLIT//
             + AspectJUtils.getMethod(joinPoint).getName();
+    }
+
+    private static String getFormatDateTime() {
+        return new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSSSSS").format(new Date());
     }
 
     private DataRecordUtils() { }
